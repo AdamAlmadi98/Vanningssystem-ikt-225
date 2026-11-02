@@ -1,0 +1,57 @@
+/*
+ * Pinnekart for Adafruit ESP32-S3 TFT Feather.
+ * Se docs/koblingsskjema.md for full koblingsoversikt.
+ *
+ * VIKTIG: Analoge sensorer MÅ ligge på ADC1 (GPIO1–10), fordi ADC2
+ * ikke kan brukes samtidig med Wi-Fi på ESP32-S3.
+ */
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/adc/adc.h>
+
+/ {
+	aliases {
+		/* I2C-bussen på STEMMA QT-kontakten (SDA=GPIO42, SCL=GPIO41) */
+		app-i2c = &i2c0;
+	};
+
+	zephyr,user {
+		/* Jordfuktighet: A5 = GPIO8 = ADC1 kanal 7 */
+		io-channels = <&adc0 7>;
+
+		/* SEN0715 vannivå: D5 = GPIO5. Høy = vann registrert.
+		 * Er sensoren aktiv lav, bytt til GPIO_ACTIVE_LOW. */
+		water-level-gpios = <&gpio0 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+
+		/* TB6612FNG kanal A */
+		pump-in1-gpios  = <&gpio0 6  GPIO_ACTIVE_HIGH>;  /* D6  -> AIN1 */
+		pump-in2-gpios  = <&gpio0 9  GPIO_ACTIVE_HIGH>;  /* D9  -> AIN2 */
+		pump-pwm-gpios  = <&gpio0 10 GPIO_ACTIVE_HIGH>;  /* D10 -> PWMA */
+		pump-stby-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;  /* D11 -> STBY */
+	};
+};
+
+/* Skjermen er av som standard i kortdefinisjonen. Den deler strøm (GPIO21)
+ * med STEMMA QT-kontakten, så dette slår også på strømmen til AHT20. */
+&st7789v_tft {
+	status = "okay";
+};
+
+/* Wi-Fi er også av som standard */
+&wifi {
+	status = "okay";
+};
+
+&adc0 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@7 {
+		reg = <7>;
+		zephyr,gain = "ADC_GAIN_1_4";          /* 11 dB demping: ca. 0–3,1 V */
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,vref-mv = <1100>;
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+};

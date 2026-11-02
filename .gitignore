@@ -1,0 +1,15 @@
+# Zephyr
+build/
+firmware/build/
+firmware/src/config/secrets.h
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+server/data/
+*.db
+
+# Diverse
+.DS_Store
+*.3mf.bak

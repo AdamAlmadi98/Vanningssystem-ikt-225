@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vanningssystem</title>
+  <meta name="theme-color" content="#2e7d32">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Vanningssystem</h1>
+    <span id="conn" class="badge">Kobler til…</span>
+  </header>
+
+  <main>
+    <section id="alerts"></section>
+
+    <section class="cards">
+      <div class="card" id="card-soil"><div class="label">Jordfuktighet</div><div class="value" id="soil">–</div></div>
+      <div class="card"><div class="label">Temperatur</div><div class="value" id="temp">–</div></div>
+      <div class="card"><div class="label">Luftfuktighet</div><div class="value" id="hum">–</div></div>
+      <div class="card" id="card-water"><div class="label">Vannivå</div><div class="value" id="water">–</div></div>
+      <div class="card" id="card-pump"><div class="label">Pumpe</div><div class="value" id="pump">–</div></div>
+      <div class="card"><div class="label">Vanninger</div><div class="value" id="count">–</div></div>
+    </section>
+
+    <section class="panel">
+      <h2>Manuell vanning</h2>
+      <div class="row">
+        <label>Varighet
+          <input type="number" id="water-seconds" min="1" max="15" value="3"> sek
+        </label>
+        <button id="btn-water">Vann nå</button>
+        <button id="btn-stop" class="secondary">Stopp</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Innstillinger</h2>
+      <form id="config-form" class="form">
+        <label class="switch"><input type="checkbox" id="cfg-auto"> Automatisk vanning når jorden er tørr</label>
+        <label>Vann når jordfuktighet er under
+          <span><input type="number" id="cfg-threshold" min="0" max="100"> %</span>
+        </label>
+        <label>Tidsplan
+          <select id="cfg-interval">
+            <option value="0">Av</option>
+            <option value="1">Hver time</option>
+            <option value="2">Hver 2. time</option>
+            <option value="3">Hver 3. time</option>
+            <option value="5">Hver 5. time</option>
+            <option value="8">Hver 8. time</option>
+            <option value="12">Hver 12. time</option>
+            <option value="24">Hver 24. time</option>
+          </select>
+        </label>
+        <label>Varighet per vanning
+          <span><input type="number" id="cfg-seconds" min="1" max="15"> sek</span>
+        </label>
+        <button type="submit">Lagre</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Jordfuktighet</h2>
+        <select id="hist-hours">
+          <option value="6">6 timer</option>
+          <option value="24" selected>24 timer</option>
+          <option value="168">7 dager</option>
+        </select>
+      </div>
+      <canvas id="chart"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Historikk</h2>
+        <button id="btn-notify" class="secondary small">Slå på varsler</button>
+      </div>
+      <ul id="events" class="events"></ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
